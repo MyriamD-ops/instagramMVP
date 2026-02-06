@@ -1,59 +1,353 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Instagram MVP - API Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Clone Instagram développé avec Laravel 11 pour un MVP fonctionnel.
 
-## About Laravel
+## 🚀 Fonctionnalités
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### ✅ Authentification
+- Inscription
+- Connexion
+- Déconnexion
+- Authentification via Sanctum (tokens API)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### ✅ Posts
+- Créer un post avec image
+- Afficher le feed (posts des utilisateurs suivis)
+- Afficher les posts d'un utilisateur
+- Supprimer un post
+- Liker/Unliker un post
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### ✅ Commentaires
+- Ajouter un commentaire sur un post
+- Afficher les commentaires d'un post
+- Supprimer un commentaire
 
-## Learning Laravel
+### ✅ Follows
+- Suivre/Ne plus suivre un utilisateur
+- Liste des followers
+- Liste des utilisateurs suivis
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### ✅ Profil utilisateur
+- Afficher un profil
+- Modifier son profil
+- Photo de profil
+- Biographie
+- Compte privé
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### ✅ Messagerie
+- Conversations privées
+- Envoyer des messages
+- Liste des conversations
+- Messages non lus
 
-## Laravel Sponsors
+## 📋 Prérequis
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP >= 8.2
+- Composer
+- MySQL ou SQLite
+- Node.js & NPM (pour le frontend)
 
-### Premium Partners
+## 🛠️ Installation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Cloner le projet
+```bash
+git clone <url-du-repo>
+cd instagramMVP
+```
 
-## Contributing
+### 2. Installer les dépendances
+```bash
+composer install
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Configuration
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Code of Conduct
+Modifier le fichier `.env` avec vos informations de base de données.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Créer le lien symbolique pour le storage
+```bash
+php artisan storage:link
+```
 
-## Security Vulnerabilities
+### 5. Migrations et seed
+```bash
+php artisan migrate:fresh --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 6. Lancer le serveur
+```bash
+php artisan serve
+```
 
-## License
+L'API sera accessible sur `http://localhost:8000/api`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📚 Endpoints API
+
+### Authentification
+
+#### Inscription
+```http
+POST /api/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+```
+
+#### Connexion
+```http
+POST /api/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Réponse:**
+```json
+{
+  "token": "1|abc123...",
+  "user": { ... }
+}
+```
+
+#### Déconnexion
+```http
+POST /api/logout
+Authorization: Bearer {token}
+```
+
+#### Utilisateur authentifié
+```http
+GET /api/user
+Authorization: Bearer {token}
+```
+
+### Posts
+
+#### Feed (posts des utilisateurs suivis)
+```http
+GET /api/feed
+Authorization: Bearer {token}
+```
+
+#### Posts d'un utilisateur
+```http
+GET /api/users/{userId}/posts
+Authorization: Bearer {token}
+```
+
+#### Créer un post
+```http
+POST /api/posts
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+
+{
+  "image": <file>,
+  "caption": "Ma belle photo !"
+}
+```
+
+#### Afficher un post
+```http
+GET /api/posts/{postId}
+Authorization: Bearer {token}
+```
+
+#### Supprimer un post
+```http
+DELETE /api/posts/{postId}
+Authorization: Bearer {token}
+```
+
+### Likes
+
+#### Liker/Unliker un post
+```http
+POST /api/posts/{postId}/like
+Authorization: Bearer {token}
+```
+
+**Réponse:**
+```json
+{
+  "liked": true,
+  "likes_count": 42
+}
+```
+
+### Commentaires
+
+#### Liste des commentaires
+```http
+GET /api/posts/{postId}/comments
+Authorization: Bearer {token}
+```
+
+#### Ajouter un commentaire
+```http
+POST /api/posts/{postId}/comments
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "content": "Super photo !"
+}
+```
+
+#### Supprimer un commentaire
+```http
+DELETE /api/posts/{postId}/comments/{commentId}
+Authorization: Bearer {token}
+```
+
+### Follows
+
+#### Suivre/Ne plus suivre
+```http
+POST /api/users/{userId}/follow
+Authorization: Bearer {token}
+```
+
+**Réponse:**
+```json
+{
+  "is_following": true,
+  "followers_count": 156
+}
+```
+
+#### Liste des followers
+```http
+GET /api/users/{userId}/followers
+Authorization: Bearer {token}
+```
+
+#### Liste des utilisateurs suivis
+```http
+GET /api/users/{userId}/following
+Authorization: Bearer {token}
+```
+
+### Profil
+
+#### Afficher un profil
+```http
+GET /api/users/{userId}
+Authorization: Bearer {token}
+```
+
+#### Modifier son profil
+```http
+PATCH /api/users/profile
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+
+{
+  "username": "johndoe",
+  "name": "John Doe",
+  "bio": "Photographe passionné",
+  "website": "https://johndoe.com",
+  "profile_picture": <file>,
+  "is_private": false
+}
+```
+
+#### Rechercher des utilisateurs
+```http
+GET /api/search?q=john
+Authorization: Bearer {token}
+```
+
+### Messagerie
+
+#### Liste des conversations
+```http
+GET /api/conversations
+Authorization: Bearer {token}
+```
+
+#### Afficher une conversation
+```http
+GET /api/conversations/{conversationId}
+Authorization: Bearer {token}
+```
+
+#### Créer/Obtenir une conversation avec un utilisateur
+```http
+GET /api/conversations/with/{userId}
+Authorization: Bearer {token}
+```
+
+#### Envoyer un message
+```http
+POST /api/conversations/{conversationId}/messages
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "content": "Salut, comment vas-tu ?"
+}
+```
+
+## 🔐 Authentification
+
+Toutes les routes protégées nécessitent un token Bearer dans le header:
+```
+Authorization: Bearer {votre-token}
+```
+
+Le token est retourné lors de la connexion ou de l'inscription.
+
+## 📊 Structure de la base de données
+
+### Tables principales:
+- `users` - Utilisateurs
+- `posts` - Publications
+- `comments` - Commentaires
+- `likes` - Likes sur les posts
+- `follows` - Relations de suivi entre utilisateurs
+- `conversations` - Conversations privées
+- `conversation_user` - Table pivot pour les participants
+- `messages` - Messages dans les conversations
+
+## 🧪 Tests
+
+### Compte de test par défaut:
+- **Email:** test@example.com
+- **Password:** password
+- **Username:** johndoe
+
+Créé automatiquement avec `php artisan db:seed`
+
+## 🎨 Frontend (À venir)
+
+Le frontend Vue.js/React sera développé séparément et consommera cette API.
+
+## 📝 Notes
+
+- Les images sont stockées dans `storage/app/public/posts` et `storage/app/public/profile_pictures`
+- Les compteurs (likes, comments, followers) sont dénormalisés pour les performances
+- Soft deletes activé sur les posts
+- Pagination à 15 éléments pour le feed, 12 pour les profils, 20 pour les listes
+
+## 🤝 Contribution
+
+Contributions bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
+
+## 📄 Licence
+
+MIT License

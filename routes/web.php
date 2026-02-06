@@ -18,6 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
 // Routes protégées par authentification
 Route::middleware(['auth', 'verified'])->group(function () {
     
