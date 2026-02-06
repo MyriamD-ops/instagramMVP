@@ -17,10 +17,15 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
+        // Générer une image placeholder via service en ligne
+        $width = 800;
+        $height = rand(600, 1000);
+        $randomId = rand(1, 1000);
+        
         return [
             'user_id' => User::factory(),
-            'caption' => fake()->optional()->sentence(15),
-            'image_path' => 'posts/default.jpg', // Chemin par défaut, à remplacer par une vraie image en production
+            'caption' => fake()->optional(0.8)->paragraph(rand(1, 3)),
+            'image_path' => "https://picsum.photos/seed/{$randomId}/{$width}/{$height}",
             'likes_count' => 0,
             'comments_count' => 0,
         ];
